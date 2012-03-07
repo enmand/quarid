@@ -12,7 +12,7 @@ import argparse
 
 def main():
 	parser = argparse.ArgumentParser(description = "qpirc (Quard Python IRC) bot: version %s" % irc.IRC.version(),
-									 epilog="Visit http://github.com/enmand/qpirc for more information");
+									 epilog="Visit http://github.com/enmand/quarid for more information");
 	parser.add_argument("--version", action="version", version="%s" % irc.IRC.version())
 	parser.add_argument("--config", "-c", default="bot.cfg", help="Configuration file to use (default bot.cfg");
 	parser.add_argument("action", choices=["start", "stop", "reload"]);
