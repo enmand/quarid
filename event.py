@@ -57,19 +57,4 @@ class Observer:
 			if name not in self.__send:
 				self.__send[name] = [];
 			self.__send[name].append(data);
-			
 
-if __name__ == "__main__":
-	def doSomething(event, text):
-		print(text);
-
-	def doSomethingElse(event, text):
-		print(text.swapcase())
-
-	event = Observer();
-
-	event.on('something', doSomething);
-	event.on('something', doSomethingElse);
-
-	event.send('something', "Print me!");
-	event.send('something', "Print me!");

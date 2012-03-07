@@ -55,6 +55,3 @@ class Config:
 			return self.__cfg[group]
 		return self.__cfg;
 
-if __name__ == "__main__":
-	cfg = Config('bot.cfg');
-	print(cfg.dict());
