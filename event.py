@@ -61,6 +61,13 @@ class Observer:
 				self.__send[name] = [];
 			self.__send[name].append(data);
 
+	"""
+	We may want to pass a specific pre-determined message with each
+	event that we fire (a configuration object, for example). The
+	Observer.also() command allows us to specify this before hand. Messages
+	passed into the Observer with also() will be exended onto the end of the
+	argument list.
+	"""
 	def also(self, *args):
 		if not isinstance(args, list):
 			args = list(args);
