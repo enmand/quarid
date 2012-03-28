@@ -102,6 +102,7 @@ Start the bot, register it's modules and run the main loop
 def qpirc(cfg_file):
 	conf = config.Config(cfg_file)
 	bot = irc.IRC.factory()
+	bot.also(conf); # also send conf with each event
 
 	core = conf.get('irc');
 	
