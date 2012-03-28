@@ -7,8 +7,9 @@ particular action can be taken on an events
 """
 
 class Observer:
-	__events = {};
-	__send = {};
+	__events 	= {};
+	__send 		= {};
+	__also		= [];
 
 	"""
 	Send some data to an event handler so that
@@ -49,12 +50,18 @@ class Observer:
 		name = name.lower();
 		if name in self.__events:
 			for ev in self.__events[name]:
-				if isinstance(data, tuple):
-					ev(self, *data);
+				if isinstance(data, list) or isinstance(data, tuple):
+					data = list(data);
 				else:
-					ev(self, data);
+					data = [data];
+				data.extend(self.__also);
+				ev(self, *data);
 		else:
 			if name not in self.__send:
 				self.__send[name] = [];
 			self.__send[name].append(data);
 
+	def also(self, *args):
+		if not isinstance(args, list):
+			args = list(args);
+		self.__also.extend(args);
