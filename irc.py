@@ -86,16 +86,18 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
 		using this library.
 		"""
 		while True:
+
 			try:
-				data = self.sock.recv(4096).decode('utf8')
-				if not data:
-					break
+				data = self.sock.recv(4096)
+				try:
+					data = data.decode('utf-8')
+				except UnicodeDecodeError:
+					data = data.decode('iso-8859-1')
 
 			except socket.error as sexc:
 				self.log.error("Could not recieve from server %s: '%s'",
 					self.__server, sexc
 				)
-				return
 
 			data = data.split('\r\n')
 
