@@ -12,7 +12,7 @@ import argparse
 
 def main():
 	parser = argparse.ArgumentParser(description = "qpirc (Quard Python IRC) bot: version %s" % irc.IRC.version(),
-									 epilog="Visit http://github.com/enmand/qpirc for more information");
+									 epilog="Visit http://github.com/enmand/quarid for more information");
 	parser.add_argument("--version", action="version", version="%s" % irc.IRC.version())
 	parser.add_argument("--config", "-c", default="bot.cfg", help="Configuration file to use (default bot.cfg");
 	parser.add_argument("action", choices=["start", "stop", "reload"]);
@@ -102,9 +102,7 @@ Start the bot, register it's modules and run the main loop
 def qpirc(cfg_file):
 	conf = config.Config(cfg_file)
 	bot = irc.IRC.factory()
-
-	bot.addListener('376', printAndJoin);
-	bot.addListener('privmsg', do_something)
+	bot.also(conf); # also send conf with each event
 
 	core = conf.get('irc');
 	
@@ -118,24 +116,6 @@ def rmpid():
 	if os.path.exists('qpirc.pid'):
 		os.remove('qpirc.pid');
 
-
-def printAndJoin(bot, server):
-	bot.join("#qpirc");
-	bot.msg("#qpirc", "I work!");
-
-
-def do_something(bot, got):
-	print(repr(got));
-	if(got['what'][0] == "!"):
-		action = got['what'][1:];
-		if action == "quit":
-			bot.quit("Thanks for having me!");
-		if action == "slap":
-			bot.action(got['who'], 'slaps enmand %s' % got['from']);
-	if(got['who'] != bot._getname()):
-		bot.msg(got['who'], "Whoo!")
-	else:
-		bot.msg(got['from'], "Good!");
 
 
 
