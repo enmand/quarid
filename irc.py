@@ -59,7 +59,8 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
 		self.log.debug("Connecting...")
 		if use_ssl == True:
 			self.log.info("Using SSL connection")
-			self.sock = ssl.wrap_socket(self.sock, ssl_version="TLSv1")
+			self.sock = ssl.wrap_socket(self.sock,
+										ssl_version=ssl.PROTOCOL_TLSv1_2)
 
 		try:
 			self.sock.connect((host, int(port)))
