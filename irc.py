@@ -41,6 +41,7 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
 	__nick = ''
 
 	def __init__(self):
+		super(EventedIRC, self).__init__()
 		self.log = logger.Log('irc.log').Logger()
 		try:
 			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
