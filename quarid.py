@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """ The Quarid IRC bot """
 # pylint: disable=bad-continuation
+import argparse
+import atexit
 import config
+import importlib
 import os
 import sys
 import signal
-import atexit
-import argparse
 
 from irc import IRC
+from logger import Log
 
 def main():
 	""" Main callable for running Quarid """
@@ -113,6 +115,12 @@ def qpirc(cfg_file):
 	bot = IRC.factory()
 	bot.also(conf) # also send conf with each Observer event
 	core = conf.get('irc')
+
+	for module in conf.get('modules.enabled'):
+		Log('plugins.log').logger.debug('Registering plugin %s', module)
+
+		plugin_module = importlib.import_module("plugins.%s" % module)
+		plugin_module.register()
 
 	bot.connect(core['host'], core['port'], core['nick'], core['pass'],
 				conf.get('ssl')['use'])

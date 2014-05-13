@@ -76,7 +76,7 @@ class Config: # pylint: disable=too-few-public-methods
 				arr = []
 
 			if arr is not None:
-				if prevtok is not "[":
+				if prevtok is not "]":
 					arr.append(tok)
 
 			prevtok = tok
@@ -85,6 +85,10 @@ class Config: # pylint: disable=too-few-public-methods
 	def get(self, group=None):
 		""" Return a configuration option """
 		if group is not None:
+			if '.' in group:
+				base, opt = group.split('.')
+				return self.__cfg[base][opt]
+
 			return self.__cfg[group]
 		return self.__cfg
 
