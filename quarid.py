@@ -120,7 +120,7 @@ def qpirc(cfg_file):
 		Log('plugins.log').logger.debug('Registering plugin %s', module)
 
 		plugin_module = importlib.import_module("plugins.%s" % module)
-		plugin_module.register()
+		plugin_module.register(bot, conf)
 
 	bot.connect(core['host'], core['port'], core['nick'], core['pass'],
 				conf.get('ssl')['use'])
