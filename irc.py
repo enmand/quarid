@@ -42,7 +42,7 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
 
 	def __init__(self):
 		super(EventedIRC, self).__init__()
-		self.log = logger.Log('irc.log').Logger()
+		self.log = logger.Log('irc.log').logger
 		try:
 			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		except socket.error as exc:
