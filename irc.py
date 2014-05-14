@@ -172,6 +172,8 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
 	###CHANNEL COMMANDS###
 	def join(self, chans, keys=None):
 		""" Have the client join a room on the IRC server """
+		if keys is None:
+			keys = []
 		channels = ''
 		channels = channels.join(chans).replace('#', ',#')
 		channels = channels[1:]
