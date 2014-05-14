@@ -31,6 +31,7 @@ class Config: # pylint: disable=too-few-public-methods
 	def __init__(self, filename):
 		__file = open(filename, 'r')
 		self.__lex = shlex.shlex(__file)
+		self.__lex.commenters = ';'
 		self.__read()
 
 	def __read(self): # pylint: disable=too-many-branches
