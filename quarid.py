@@ -113,7 +113,6 @@ def qpirc(cfg_file):
 	"""
 	conf = config.Config(cfg_file)
 	bot = IRC.factory()
-	bot.also(conf) # also send conf with each Observer event
 	core = conf.get('irc')
 
 	for module in conf.get('modules.enabled'):
