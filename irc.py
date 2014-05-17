@@ -42,7 +42,7 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
 
 	def __init__(self):
 		super(EventedIRC, self).__init__()
-		self.log = logger.Log('irc.log').Logger()
+		self.log = logger.Log('irc.log').logger
 		try:
 			self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		except socket.error as exc:
@@ -172,6 +172,8 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
 	###CHANNEL COMMANDS###
 	def join(self, chans, keys=None):
 		""" Have the client join a room on the IRC server """
+		if keys is None:
+			keys = []
 		channels = ''
 		channels = channels.join(chans).replace('#', ',#')
 		channels = channels[1:]
