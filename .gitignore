@@ -1,2 +1,8 @@
 *.pyc
 __pycache__/
+bin
+lib
+pyvenv.cfg
+pip-selfcheck.json
+lib64
+qpirc.pid
