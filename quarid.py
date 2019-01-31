@@ -111,7 +111,7 @@ def stop():
 
 def qpirc(cfg_file):
     """
-    Start the bot, register it's modules and run the main loop
+    Start the bot, register its modules and run the main loop
     """
     conf = config.Config(cfg_file)
     bot = IRC.factory()
@@ -122,12 +122,10 @@ def qpirc(cfg_file):
         Log('plugins.log').logger.debug('Registering plugin %s', module)
 
         plugin_module = importlib.import_module("plugins.%s" % module)
-        # Below fails due to register() not taking any extra args
-        # plugin_module.register(bot, conf)
-        plugin_module.register()
+        plugin_module.register(bot, conf)
 
     print("Starting the bot...")
-    bot.connect(
+    connect_status = bot.connect(
         core['host'],
         core['port'],
         core['nick'],
@@ -135,7 +133,10 @@ def qpirc(cfg_file):
         conf.get('ssl')['use']
     )
     # Sleep while we connect - we may be able to get rid of this at some point
-    time.sleep(15)
+    while True:
+        time.sleep(5)
+        if connect_status is True:
+            break
     threads = []
 
     # Run the main loop listening for events
