@@ -8,6 +8,8 @@ import importlib
 import os
 import sys
 import signal
+from threading import Thread
+import time
 
 from irc import IRC
 from logger import Log
@@ -134,6 +136,9 @@ def qpirc(cfg_file):
     )
     # Sleep while we connect - we may be able to get rid of this at some point
     time.sleep(15)
+    threads = []
+
+    # Run the main loop listening for events
     threads.append(Thread(target=bot.run))
     for thread in threads:
         thread.setDaemon(True)
