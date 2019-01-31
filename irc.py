@@ -79,6 +79,10 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
 
         self.log.debug("Connected to " + self.__server)
 
+    def disconnect(self, msg):
+        self.quit(msg)
+        self.sock.close()
+
     def run(self):
         """
         Run the bot, by listening to the IRC server, and parsing the requests
@@ -175,8 +179,11 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
         channels = ''
         channels = channels.join(chans).replace('#', ',#')
         channels = channels[1:]
-        channel_keys = ", ".join(keys)
-        self.log.info(str("Joining channels: {0}").format(channels))
+        #channel_keys = ", ".join(keys)
+        channel_keys = keys
+        self.log.info(
+            str("Joining channels: {0},{1}")
+                .format(channels, channel_keys))
         self.__send('JOIN %s %s' % (channels, channel_keys))
 
     def part(self, *chans):
