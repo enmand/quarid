@@ -1,6 +1,6 @@
 """
 URLGet module for Quarid
 """
-def register():
+def register(bot, conf):
 	""" Register the 'urlget' module with Quarid"""
 	pass

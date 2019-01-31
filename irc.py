@@ -72,10 +72,11 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
             luhn = data.partition('NOTICE')
             self.__server = luhn[0][1:].strip()
             self.__nick = nick
-
         except socket.error as exc:
             self.log.critical("Could not connect: '%s'", exc)
             return False
+        else:
+            return True
 
         self.log.debug("Connected to " + self.__server)
 
@@ -117,6 +118,17 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
                     Got PING, sending PONG
                     """
                     self.pong(response)
+
+                # Expect :user!user@irc-chat-box.net PRIVMSG #channel :!version
+                elif re.compile(
+                    r'^:(.*)!(.*)@(.*) (\w+) #(\w+) :!version'
+                ).match(message):
+                    '''
+                    Send version if requested
+                    '''
+                    channel = re.sub('^:(.*)!(.*)@(.*) PRIVMSG ', '', message)
+                    channel = re.sub(' :!version ', '', message)
+                    self.msg('#goaway', IRC.version())
 
                 elif re.compile(r'^:%s \d{3}' % self.__server).match(message):
                     serv_event, serv_data = re.compile(
@@ -207,6 +219,10 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
         channels = channels.join(chans).replace('#', ',#')
         channels = channels[1:]
         self.__send('NAMES %s' % channels)
+    
+    def info(self):
+        """ Get server info """
+        self.__send('INFO')
 
     def list(self, *chans, serv=''):
         """ Return a list of channels on this IRC server """
