@@ -175,7 +175,12 @@ class EventedIRC(event.Observer): # pylint: disable=too-many-public-methods
         channels = ''
         channels = channels.join(chans).replace('#', ',#')
         channels = channels[1:]
-        channel_keys = ", ".join(keys)
+		# Commenting out below for now as we will run this method once
+		# per channel
+        # channel_keys = ", ".join(keys)
+        channel_keys = keys
+        self.log.info(str("Joining channels: {0},{1}")
+                .format(channels, channel_keys))
         self.__send('JOIN %s %s' % (channels, channel_keys))
 
     def part(self, *chans):

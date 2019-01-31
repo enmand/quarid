@@ -120,11 +120,39 @@ def qpirc(cfg_file):
         Log('plugins.log').logger.debug('Registering plugin %s', module)
 
         plugin_module = importlib.import_module("plugins.%s" % module)
-        plugin_module.register(bot, conf)
+        # Below fails due to register() not taking any extra args
+        # plugin_module.register(bot, conf)
+        plugin_module.register()
 
-    bot.connect(core['host'], core['port'], core['nick'], core['pass'],
-                conf.get('ssl')['use'])
-    bot.run()
+    print("Starting the bot...")
+    bot.connect(
+        core['host'],
+        core['port'],
+        core['nick'],
+        core['pass'],
+        conf.get('ssl')['use']
+    )
+    # Sleep while we connect - we may be able to get rid of this at some point
+    time.sleep(15)
+    threads.append(Thread(target=bot.run))
+    for thread in threads:
+        thread.setDaemon(True)
+        thread.start()
+
+    # Join some channels if they're configured
+    if core['channels'] is not None:
+        for chan_params in core['channels'].split(','):
+            chan_params = chan_params.split(' ')
+            chan = chan_params[0]
+            if len(chan_params) > 1:
+                # Assume that we have a key, otherwise set to empty
+                chan_key = chan_params[1]
+            else:
+                chan_key = ''
+            bot.join(chan, keys=chan_key)
+
+    while True:
+        pass
 
 def rmpid():
     """
