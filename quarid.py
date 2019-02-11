@@ -8,6 +8,8 @@ import importlib
 import os
 import sys
 import signal
+from threading import Thread
+import time
 
 from irc import IRC
 from logger import Log
@@ -109,7 +111,7 @@ def stop():
 
 def qpirc(cfg_file):
     """
-    Start the bot, register it's modules and run the main loop
+    Start the bot, register its modules and run the main loop
     """
     conf = config.Config(cfg_file)
     bot = IRC.factory()
@@ -122,9 +124,41 @@ def qpirc(cfg_file):
         plugin_module = importlib.import_module("plugins.%s" % module)
         plugin_module.register(bot, conf)
 
-    bot.connect(core['host'], core['port'], core['nick'], core['pass'],
-                conf.get('ssl')['use'])
-    bot.run()
+    print("Starting the bot...")
+    connect_status = bot.connect(
+        core['host'],
+        core['port'],
+        core['nick'],
+        core['pass'],
+        conf.get('ssl')['use']
+    )
+    # Sleep while we connect - we may be able to get rid of this at some point
+    while True:
+        time.sleep(5)
+        if connect_status is True:
+            break
+    threads = []
+
+    # Run the main loop listening for events
+    threads.append(Thread(target=bot.run))
+    for thread in threads:
+        thread.setDaemon(True)
+        thread.start()
+
+    # Join some channels if they're configured
+    if core['channels'] is not None:
+        for chan_params in core['channels'].split(','):
+            chan_params = chan_params.split(' ')
+            chan = chan_params[0]
+            if len(chan_params) > 1:
+                # Assume that we have a key, otherwise set to empty
+                chan_key = chan_params[1]
+            else:
+                chan_key = ''
+            bot.join(chan, keys=chan_key)
+
+    while True:
+        pass
 
 def rmpid():
     """

@@ -2,6 +2,5 @@
 Slap module for Quarid
 """
 
-def register():
-	""" Register the 'slap' module with Quarid """
-
+def register(bot, conf):
+    """ Register the 'slap' module with Quarid """
